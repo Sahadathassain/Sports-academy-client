@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
-import Slider from "../Silder";
+import Section from "../Section/Section";
+
 
 
 
@@ -9,7 +10,7 @@ const Home = () => {
             <Helmet>
                 <title>Bistro Boss | Home</title>
             </Helmet>
-       <Slider></Slider>
+       <Section></Section>
         </div>
     );
 };
