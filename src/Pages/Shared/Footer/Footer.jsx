@@ -13,11 +13,11 @@ const Footer = () => {
                 <footer className="footer p-10  bg-yellow-500 text-base-content w-full">
                     <div className="justify-center items-center">
                         <img
-                            className="w-10 h-10 rounded-lg mr-2"
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6_P5oCkEo80h-NCtlhFoMkGMJYxS_g9vcXw&usqp=CAU"
+                            className="w-12 h-12 rounded-lg ml-12 items-center"
+                            src="https://img.freepik.com/premium-vector/sports-academy-logo-illustration_288067-677.jpg"
                             alt=""
                         />
-                        <p className="text-center">Educational and Learning<br />Providing reliable tech since 2022</p>
+                        <p className=" text-1xl">Sports Academy<br />Providing reliable tech since 2022</p>
                     </div>
 
                     <div className="mt-4">

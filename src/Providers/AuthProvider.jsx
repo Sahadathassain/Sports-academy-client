@@ -1,91 +1,118 @@
-import PropTypes from 'prop-types';
 
-import { createContext, useState, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import {
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
-  GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
-import app from "../firebase/firebase.config";
+import { app } from "../firebase/firebase.config";
 
 export const AuthContext = createContext(null);
-const auth = getAuth(app);
 
-const AuthProvider = ( {children} ) => {
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const createUser = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password).then(
-      (createdUser) => {
-        setUser(createdUser.user);
-        return createdUser;
-      }
-    );
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password)
+      .then((result) => {
+        setLoading(false);
+        return result;
+      })
+      .catch((error) => {
+        setLoading(false);
+        throw error;
+      });
   };
+
   const signIn = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password)
+      .then((result) => {
+        setLoading(false);
+        return result;
+      })
+      .catch((error) => {
+        setLoading(false);
+        throw error;
+      });
   };
 
   const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        setLoading(false);
+        return result;
+      })
+      .catch((error) => {
+        setLoading(false);
+        throw error;
+      });
   };
 
-  const updateUser = (name, photo) => {
-    const currentUser = auth.currentUser;
-    return updateProfile(currentUser, {
+  const logOut = () => {
+    setLoading(true);
+    return signOut(auth)
+      .then(() => {
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        throw error;
+      });
+  };
+
+  const updateUserProfile = (name, photo) => {
+    return updateProfile(auth.currentUser, {
       displayName: name,
       photoURL: photo,
     });
   };
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (loggedUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (loggedUser) => {
       setUser(loggedUser);
       setLoading(false);
     });
+
     return () => {
-      unSubscribe();
+      unsubscribe();
     };
   }, []);
 
   useEffect(() => {
     if (user) {
-      updateUser(user.displayName, user.photoURL);
+      updateProfile(user, {
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+      });
     }
   }, [user]);
 
-  const logOut = () => {
-    return signOut(auth);
-  };
-
   const authInfo = {
     user,
+    loading,
+    setUser,
     createUser,
     signIn,
     signInWithGoogle,
     logOut,
-    updateUser,
-    loading,
+    updateUserProfile,
   };
 
   return (
-    <AuthContext.Provider value={authInfo}>
-  {children}
-</AuthContext.Provider>
-
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
-};
-
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default AuthProvider;

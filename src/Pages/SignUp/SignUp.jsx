@@ -1,163 +1,179 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
-import SocialLogin from "../SocialLogin/SocialLogin";
-import { AuthContext } from "../../Providers/AuthProvider";
-
+import Swal from "sweetalert2";
+import useAuth from "../../hooks/uesAuth";
 
 const SignUp = () => {
-  const { createUser, updateUser } = useContext(AuthContext);
-  const [showPassword, setShowPassword] = useState(false);
-  const [passwordError, setPasswordError] = useState("");
-  const [isRegistered, setIsRegistered] = useState(false);
+  const navigate = useNavigate();
+  const { createUser, updateUserProfile, setUser } = useAuth();
 
-  const handleRegister = (event) => {
-    event.preventDefault();
-    const form = event.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const photo = form.photo.value;
-    const password = form.password.value;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    // watch,
+    // reset,
+  } = useForm();
 
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
-    if (!passwordRegex.test(password)) {
-      setPasswordError(
-        "Password must contain at least 6 characters, one uppercase letter, one lowercase letter, and one number."
-      );
-      setIsRegistered(false);
-      return;
-    }
-
-    createUser(email, password)
+  const onSubmit = (data) => {
+    createUser(data.email, data.password)
       .then((result) => {
-        const createdUser = result.user;
-        createdUser.photoURL = photo;
-        createdUser.displayName = name;
-        updateUser(name, photo)
+        const loggedUser = result.user;
+        console.log(loggedUser);
+
+        updateUserProfile(data.name, data.photoUrl)
           .then(() => {
-            console.log("User updated Successfully");
+            setUser({
+              ...loggedUser,
+              displayName: data.name,
+              photoURl: data.photoUrl,
+            });
+            const users = {
+              name: data.name,
+              email: data.email,
+              photoURl: data.photoUrl,
+              role: "student",
+            };
+            console.log(users);
+            fetch(`http://localhost:5000/users`, {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify(users),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.insertedId) {
+                  Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "User created successfully.",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                }
+              });
+
+            navigate("/");
           })
-          .catch(() => {
-            console.log("User failed to update");
+          .catch((error) => {
+            console.log(error);
+            // Handle error while updating user profile
           });
-        setIsRegistered(true);
-        setPasswordError("");
       })
       .catch((error) => {
-        console.error(error);
-        setIsRegistered(false);
-        setPasswordError(error.message);
+        console.log(error);
+        // Handle error while creating user
       });
   };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
   return (
-    <div className="flex items-center min-h-screen justify-evenly   ">
-    <div>
-        <img className="h-auto w-96" src="https://img.freepik.com/free-vector/tablet-login-concept-illustration_114360-7883.jpg?w=2000" alt="" />
-    </div>
-     <div className="min-h-screen md:py-6 flex justify-center items-center">
-      <div className="max-w-md w-full bg-white rounded-lg overflow-hidden ">
-        <div className="py-6 px-8">
-          <h2 className="text-4xl font-bold text-center mb-4">Register</h2>
-
-          {passwordError && (
-            <div className="bg-red-100 border border-red-400 text-red-700 py-2 px-4 rounded mb-4">
-              <p>{passwordError}</p>
-            </div>
+    <div className="flex justify-center items-center h-screen">
+      <form
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-lg w-full"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <h2 className="text-3xl text-center font-bold mb-4">Sign Up</h2>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+            Name
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="name"
+            type="text"
+            placeholder="Enter your name"
+            {...register('name', { required: true })}
+          />
+          {errors.name && (
+            <p className="text-red-500 text-xs italic">Name is required</p>
           )}
-          {isRegistered && (
-            <div className="bg-green-100 border border-green-400 text-green-700 py-2 px-4 rounded mb-4">
-              <p>Registration successful!</p>
-            </div>
-          )}
-          <form onSubmit={handleRegister}>
-            <div className="mb-4">
-              <label className="block text-lg text-gray-800 font-semibold mb-2">
-                Name
-              </label>
-              <input
-                className="w-full py-2 px-4 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                type="text"
-                name="name"
-                placeholder="Your Name"
-                required
-              />
-            </div>
-            <div className="flex flex-col mb-4">
-              <label className="block text-lg text-gray-800 font-semibold mb-2">
-                Photo URL
-              </label>
-              <input
-                className="w-full py-2 px-4 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                type="text"
-                name="photo"
-                placeholder="Photo URL"
-                required
-              />
-            </div>
-            {/* Other form fields */}
-            <div className="mb-4">
-              <label className="block text-lg text-gray-800 font-semibold mb-2">
-                Email address
-              </label>
-              <input
-                className="w-full py-2 px-4 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                type="email"
-                name="email"
-                placeholder="Enter email"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-lg text-gray-800 font-semibold mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  className="w-full py-2 px-4 pr-10 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Password"
-                  required
-                />
-                <span
-                  className="absolute top-2 right-2 cursor-pointer"
-                  onClick={togglePasswordVisibility}>
-                  {showPassword ? (
-                    <FiEyeOff className="text-gray-600" />
-                  ) : (
-                    <FiEye className="text-gray-600" />
-                  )}
-                </span>
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full text-xl bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-purple-600 hover:to-yellow-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-pink-500">
-              Register
-            </button>
-            <p className="mt-4 text-center text-lg text-gray-600">
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="text-yellow-600 text-2xl font-bold underline">
-                Login
-              </Link>
-            </p>
-          </form> 
-          <div className="my-8 flex justify-center">
-            <SocialLogin></SocialLogin>
-          </div>
         </div>
-      </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            Email
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            {...register('email', { required: true })}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs italic">Email is required</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+            Password
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            {...register('password', {
+              required: true,
+              minLength: 6,
+              pattern: /(?=.*[A-Z])(?=.*\W)/,
+            })}
+          />
+          {errors.password && errors.password.type === 'required' && (
+            <p className="text-red-500 text-xs italic">Password is required</p>
+          )}
+          {errors.password && errors.password.type === 'minLength' && (
+            <p className="text-red-500 text-xs italic">
+              Password must be at least 6 characters long
+            </p>
+          )}
+          {errors.password && errors.password.type === 'pattern' && (
+            <p className="text-red-500 text-xs italic">
+              Password must contain at least one capital letter and one special character
+            </p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">
+            Confirm Password
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="confirmPassword"
+            type="password"
+            placeholder="Confirm your password"
+            {...register('confirmPassword', { required: true })}
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-xs italic">Please confirm your password</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="photoUrl">
+            Photo URL
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="photoUrl"
+            type="text"
+            placeholder="Enter your photo URL"
+            {...register('photoUrl')}
+          />
+          {errors.photoUrl && (
+            <p className="text-red-500 text-xs italic">Photo URL is required</p>
+          )}
+        </div>
+        <div className="flex items-center justify-center">
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Sign Up
+          </button>
+        </div>
+      </form>
     </div>
-   </div>
   );
 };
 

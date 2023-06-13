@@ -1,10 +1,6 @@
 import { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-
-
-
-
 import SocialLogin from "../SocialLogin/SocialLogin";
 import { AuthContext } from "../../Providers/AuthProvider";
 
@@ -40,12 +36,12 @@ const Login = () => {
   return (
     
    <div className="flex items-center min-h-screen justify-evenly   ">
-    <div>
+    <div >
         <img className="h-96 w-96" src="https://img.freepik.com/free-vector/tablet-login-concept-illustration_114360-7883.jpg?w=2000" alt="" />
     </div>
      <div className="flex items-center justify-center min-h-screen ">
-      <div className="w-full max-w-md bg-white  rounded p-8">
-        <h2 className="text-3xl font-bold text-center mb-4">Login Form</h2>
+      <div  className="w-full max-w-md bg-white  rounded p-8">
+        <h2  className="text-3xl font-bold text-center mb-4">Login Form</h2>
         {errorMessage && (
           <div
             className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4"
