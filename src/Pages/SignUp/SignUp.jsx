@@ -74,7 +74,7 @@ const SignUp = () => {
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-lg w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h2 className="text-3xl text-center font-bold mb-4">Sign Up</h2>
+        <h2 className="text-3xl text-center font-bold mb-4 text-yellow-500">Sign Up</h2>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
             Name
@@ -167,7 +167,7 @@ const SignUp = () => {
         <div className="flex items-center justify-center">
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="w-full bg-yellow-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Sign Up
           </button>

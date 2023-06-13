@@ -36,6 +36,9 @@ const AllClass = () => {
                             Name
                         </th>
                         <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">
+                        Instructor Image
+                        </th>
+                        <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">
                             Instructor Name
                         </th>
                         <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">
@@ -47,18 +50,27 @@ const AllClass = () => {
                         <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">Button</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className='py-10 bg-slate-200 '>
                     {classes.map((classItem) => (
                         <tr key={classItem.id}>
-                            <td className="px-10 mx-2 py-6   ">
+                            <td className="px-16 mx-2 py-6 mb-3  whitespace-nowrap justify-center  ">
                                 <img
                                     src={classItem.
                                         classImage}
                                     alt={classItem.name}
-                                    className="h-40 w-25 rounded-xl"
+                                    className="h-30 w-20 rounded-xl"
                                 />
                             </td>
-                            <td className="px-6 py-4 text-center whitespace-nowrap">{classItem.className}</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap ">{classItem.className}</td>
+                            <td className="px-16  py-6 text-center whitespace-nowrap ml-6 ">
+                                <img
+                                    src={classItem.
+                                        instructorImage}
+                                    alt={classItem.name}
+                                    className="h-12 w-12 rounded-full"
+                                />
+                            </td>
+                            
                             <td className="px-6 py-4 text-center whitespace-nowrap">{classItem.
                                 instructorName}</td>
                             <td className="px-6 py-4 text-center whitespace-nowrap">{classItem.availableSeats}</td>
