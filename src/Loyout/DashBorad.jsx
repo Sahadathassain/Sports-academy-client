@@ -1,44 +1,98 @@
 import { FaAddressCard, FaFolder } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
+import { FcPaid } from 'react-icons/fc';
+import { MdManageAccounts, MdOutlinePayment} from 'react-icons/md';
+
+import { GrUserManager } from 'react-icons/gr';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../Providers/AuthProvider';
 
-
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
-  
-console.log(user);
+  const isAdmin = true;
+  const isInstructor = false;
+  const isStudent = false;
+  console.log(user);
+
+  const renderStudentLinks = () => (
+    <>
+      <li>
+        <NavLink className="mr-2 flex items-center" to="enrolled-classes" exact>
+          <FcPaid className="mr-2" />
+          <span className="text-black text-2xl">Enrolled Classes</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink className="mr-2 mt-9 mb-5 flex items-center" to="selected-classes" exact>
+          <AiFillHome className="mr-2" />
+          <span className="text-black text-2xl">Selected Classes</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink className="mr-2 flex items-center" to="payment" exact>
+          <MdOutlinePayment className="mr-2" />
+          <span className="text-black text-2xl">Payment</span>
+        </NavLink>
+      </li>
+    </>
+  );
+
+  const renderInstructorLinks = () => (
+    <>
+      <li>
+        <NavLink className="mr-2 flex items-center" to="add-class" exact>
+          <FaAddressCard className="mr-2" />
+          <span className="text-black text-2xl">Add Class</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink className="mr-2 mt-9 mb-5 flex items-center" to="my-classes" exact>
+          <FaFolder className="mr-2" />
+          <span className="text-black text-2xl">My Classes</span>
+        </NavLink>
+      </li>
+    </>
+  );
+
+  const renderAdminLinks = () => (
+    <>
+      <li>
+        <NavLink className="mr-2 flex items-center" to="manage-classes" exact>
+          <MdManageAccounts className="mr-2" />
+          <span className="text-black text-2xl">Manage Classes</span>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink className="mr-2 mt-9 mb-5 flex items-center" to="manage-users" exact>
+          <GrUserManager className="mr-2" />
+          <span className="text-black text-2xl">Manage Users</span>
+        </NavLink>
+      </li>
+    </>
+  );
+
   return (
     <div className="flex">
       <div className="w-64 bg-yellow-500 fixed h-screen">
         <div className="flex items-center justify-center p-4">
           <div className="items-center justify-center">
             <img
-              src={user?.photoURL} // Access the user's photo URL
+              src={user?.photoURL}
               alt="Avatar"
               className="w-48 h-48 rounded-full mr-3"
             />
             <div>
-              <p className="text-black text-center font-bold">{user?.displayName}</p> {/* Access the user's email */}
+              <p className="text-black text-center font-bold">{user?.displayName}</p>
             </div>
           </div>
         </div>
 
         <div className="gap-10">
           <ul className="p-4">
-            <li>
-              <NavLink className="mr-2 flex items-center" to="/dashboard/addclass">
-                <FaAddressCard className="mr-2" />
-                <span className="text-black text-3xl">Add Classes</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className="mr-2 mt-9 mb-5 flex items-center" to="/dashboard/myclass">
-                <FaFolder className="mr-2" />
-                <span className="text-black text-3xl">My Classes</span>
-              </NavLink>
-            </li>
+            {isStudent && renderStudentLinks()}
+            {isInstructor && renderInstructorLinks()}
+            {isAdmin && renderAdminLinks()}
             <hr />
             <li>
               <NavLink className="mr-2 mt-9 flex items-center" to="/">

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 const AddClasses = () => {
@@ -9,7 +8,6 @@ const AddClasses = () => {
   const [instructorName, setInstructorName] = useState('');
   const [instructorEmail, setInstructorEmail] = useState('');
   const [instructorImage, setInstructorImage] = useState('');
-  
 
   const updateClassName = (e) => {
     setClassName(e.target.value);
@@ -39,9 +37,8 @@ const AddClasses = () => {
     setInstructorImage(e.target.value);
   };
 
-  
- 
-  const addButtonClicked = async () => {
+  const addButtonClicked = async (e) => {
+    e.preventDefault();
     try {
       const response = await fetch('http://localhost:5000/addClass', {
         method: 'POST',
@@ -56,12 +53,20 @@ const AddClasses = () => {
           instructorName,
           instructorEmail,
           instructorImage,
+          status: 'pending',
         }),
       });
-  
+
       if (response.ok) {
         console.log('Class added successfully');
         // Reset form fields or perform any other necessary actions
+        setClassName('');
+        setClassImage('');
+        setAvailableSeats(0);
+        setPrice(0);
+        setInstructorName('');
+        setInstructorEmail('');
+        setInstructorImage('');
       } else {
         console.log('Failed to add class');
         // Handle error case
@@ -70,7 +75,6 @@ const AddClasses = () => {
       console.log('An error occurred:', error);
     }
   };
-  
 
   return (
     <div className="bg-gray-200 mx-auto ml-16 mt-16 p-4 w-[900px] ">

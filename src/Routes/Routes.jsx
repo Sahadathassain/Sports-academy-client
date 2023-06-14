@@ -10,6 +10,12 @@ import DashBoard from "../Loyout/DashBorad";
 import AddClasses from "../Pages/Dashboard/AddClasses";
 import AllClass from "../Pages/AllClass/AllClass";
 import MyClasses from "../Pages/Dashboard/MyClasses";
+import MyEnrolledClasses from "../Pages/Dashboard/MyEnrolledClasses";
+import MySelectedClasses from "../Pages/Dashboard/MySelectedClasses";
+import ManageClasses from "../Pages/Dashboard/ManageClasses";
+import ManageUsers from "../Pages/Dashboard/ManageUsers";
+import Payment from "../Pages/Dashboard/Payment";
+import Instructors from "../Pages/Instructors/Instructors";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +37,11 @@ const router = createBrowserRouter([
       },{
         path:'/allclass',
         element:<AllClass></AllClass>
+      },
+      
+      {
+        path:'/Instructors',
+        element:<Instructors></Instructors>,
       }
     ]
   },
@@ -39,14 +50,35 @@ const router = createBrowserRouter([
     element: <DashBoard></DashBoard>,
     children: [
       {
-        path:'/dashboard/addclass',
+        path:'addclass',
         element:<AddClasses></AddClasses>
       },
       {
-        path:'/dashboard/myclass',
+        path:'myclass',
         element:<MyClasses></MyClasses>,
-      }
+      },
+      {
+        path:'payment',
+        element:<Payment></Payment>,
+      },
+      {
+        path:'enrolled-classes',
+        element:<MyEnrolledClasses/>,
+      },
+      {
+        path:'selected-classes',
+        element:<MySelectedClasses></MySelectedClasses>,
+      },
+      {
+        path:'manage-classes',
+        element:<ManageClasses></ManageClasses>,
+      },
+      {
+        path:'manage-users',
+        element:<ManageUsers></ManageUsers>,
+      },
     ]
   }
 ]);
+
 export default router;

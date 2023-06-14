@@ -4,6 +4,7 @@ import Section from "../Section/Section";
 
 
 
+
 const Home = () => {
     return (
         <div>
@@ -11,6 +12,7 @@ const Home = () => {
                 <title> SA | Home</title>
             </Helmet>
        <Section></Section>
+      
         </div>
     );
 };
