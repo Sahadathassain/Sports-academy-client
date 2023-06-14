@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Providers/AuthProvider";
-import jwtDecode from "jwt-decode";
 
 const SocialLogin = () => {
   const { signInWithGoogle } = useContext(AuthContext);
@@ -12,10 +11,31 @@ const SocialLogin = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const idToken = await signInWithGoogle(); // Obtain the Google sign-in token
-      const decodedToken = jwtDecode(idToken); // Decode the token to access its payload
-      // You can perform any additional logic here with the decoded token, such as storing it in localStorage, etc.
-      console.log("Decoded token:", decodedToken);
+      const user = await signInWithGoogle(); // Obtain the Google sign-in token
+
+      // Save login data to the server
+      const userData = {
+        name: "user.name",
+        email: "user.email",
+        photoURl: "user.photoUrl",
+        role: "student",
+      };
+      console.log(userData);
+      const response = await fetch("http://localhost:5000/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user
+        }),
+      });
+
+      if (response.ok) {
+        console.log("Login data saved successfully!");
+      } else {
+        console.error("Failed to save login data.");
+      }
 
       navigate(from, { replace: true });
       console.log("Signed in with Google successfully!");

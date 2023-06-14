@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import Swal from "sweetalert2";
-import useAuth from "../../hooks/uesAuth";
+import useAuth from "../../hooks/useAuth";
 
 const SignUp = () => {
   const navigate = useNavigate();

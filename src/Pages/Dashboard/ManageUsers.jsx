@@ -1,110 +1,99 @@
-import { useContext, useState } from 'react';
-import { AuthContext } from '../../Providers/AuthProvider';
+import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from '../../hooks/uesAxosecure';
+import Swal from 'sweetalert2';
 
 const ManageUsers = () => {
-  const { user } = useContext(AuthContext);
-  const [users, setUsers] = useState([user]);
+  const axiosSecure = useAxiosSecure();
+  const { data: users = [], refetch } = useQuery(["users"], async () => {
+    const res = await axiosSecure.get("/users");
+    return res.data;
+  });
 
-  // const updateUserRole = (userId, newRole) => {
-  //   const updatedUsers = users.map(user => {
-  //     if (user._id === userId) {
-  //       return { ...user, role: newRole };
-  //     }
-  //     return user;
-  //   });
-
-  //   setUsers(updatedUsers);
-  // };
-
-  const makeInstructor = (userId) => {
-    const updatedUsers = users.map(user => {
-      if (user._id === userId) {
-        return { ...user, role: 'instructor' };
-      }
-      return user;
-    });
-
-    setUsers(updatedUsers);
-
-    fetch(`/users/${userId}/role`, {
-      method: 'PUT',
-      body: JSON.stringify({ role: 'instructor' }),
+  const handleMakeAdmin = (user) => {
+    fetch(`http://localhost:5000/users/admin/${user._id}`, {
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
     })
-      .then(response => {
-        if (response.ok) {
-          console.log('User role updated successfully.');
-          // You can perform additional actions if needed
-        } else {
-          throw new Error('Failed to update user role.');
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.modifiedCount) {
+          Swal.fire({
+            title: `${user.name} is an Admin Now!`,
+            showConfirmButton: false,
+            timer: 1000,
+            icon: "success",
+          });
+          refetch();
         }
-      })
-      .catch(error => {
-        console.error('Error updating user role:', error);
-        // Handle error
       });
   };
 
-  const makeAdmin = (userId) => {
-    const updatedUsers = users.map(user => {
-      if (user._id === userId) {
-        return { ...user, role: 'admin' };
-      }
-      return user;
-    });
-
-    setUsers(updatedUsers);
-
-    fetch(`/users/${userId}/role`, {
-      method: 'PUT',
-      body: JSON.stringify({ role: 'admin' }),
+  const handleMakeInstructor = (user) => {
+    fetch(`http://localhost:5000/users/instructor/${user._id}`, {
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
     })
-      .then(response => {
-        if (response.ok) {
-          console.log('User role updated successfully.');
-          // You can perform additional actions if needed
-        } else {
-          throw new Error('Failed to update user role.');
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.modifiedCount) {
+          Swal.fire({
+            title: `${user.name} is now an Instructor!`,
+            showConfirmButton: false,
+            timer: 1000,
+            icon: "success",
+          });
+          refetch();
         }
-      })
-      .catch(error => {
-        console.error('Error updating user role:', error);
-        // Handle error
       });
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto mt-24 ml-20">
       <table className="min-w-full">
         <thead>
           <tr>
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Role</th>
-            <th className="px-4 py-2">Actions</th>
+            <th className="px-4 py-2 text-center">Photo URL</th>
+            <th className="px-4 py-2 text-center">Name</th>
+            <th className="px-4 py-2 text-center">Role</th>
+            <th className="px-4 py-2 text-center">Actions</th>
+            <th className="px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
+          {users.map((user) => (
             <tr key={user._id}>
-              <td className="px-4 py-2">{user.name}</td>
-              <td className="px-4 py-2">{user.role}</td>
-              <td className="px-4 py-2">
+              <td className="px-4 py-2 text-center">
+                <div className="flex items-center ">
+                  <img
+                    src={user.photoURl}
+                    alt="Avatar"
+                    className="w-14 h-14 rounded-full  mr-6"
+                  />
+                 
+                </div>
+              </td>
+              <td className="px-4 py-2 text-center"> {user.name}</td>
+              <td className="px-4 py-2 text-center">{user.role}</td>
+              <td className="px-4 py-2 text-center">
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-                  onClick={() => makeInstructor(user._id)}
-                  disabled={user.role === 'instructor'}
+                  className="btn px-4 py-2"
+                  onClick={() => handleMakeInstructor(user)}
+                  disabled={user.role === "instructor"}
                 >
                   Make Instructor
                 </button>
+              </td>
+              <td className="px-4 py-2 text-center">
                 <button
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => makeAdmin(user._id)}
-                  disabled={user.role === 'admin'}
+                  className="btn px-4 py-2"
+                  onClick={() => handleMakeAdmin(user)}
+                  disabled={user.role === "admin"}
                 >
                   Make Admin
                 </button>

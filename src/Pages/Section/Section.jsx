@@ -4,15 +4,15 @@ import "aos/dist/aos.css";
 
 const Section = () => {
   useEffect(() => {
-    AOS.init({ duration: 1000 }); // Initialize AOS with desired options
+    AOS.init({ duration: 2000 }); // Initialize AOS with desired options
   }, []);
 
   return (
-    <section className="text-gray-600 w-auto overflow-hidden body-font">
-      <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
+    <section className="text-gray-600 mx-auto">
+      <div className="mx-auto flex flex-col md:flex-row items-center px-5 py-24">
         <div
           data-aos="fade-right"
-          className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0"
+          className="lg:w-1/2 md:w-5/6 mb-10 md:mb-0"
         >
           <img
             className="object-cover object-center rounded"
@@ -27,13 +27,10 @@ const Section = () => {
           <h1 className="title-font sm:text-4xl font-bold text-xl mb-4 text-gray-900">
             Sports are specific <br />
             physical activities
-            <br className="hidden lg:inline-block" /> one can compete Game
+            <br className="hidden lg:inline-block" /> one can compete in.
           </h1>
           <p className="mb-8 leading-relaxed">
-            famous sports Super Bowl, FIFA World Cup, Olympic Games, UEFA
-            Champions League, Wimbledon, Tour de France, The Masters, NBA
-            Finals, Ashes etc Series ote bag selvage hot chicken authentic
-            turmeric truffaut hexagon try-hard chambray.
+            Some famous sports include the Super Bowl, FIFA World Cup, Olympic Games, UEFA Champions League, Wimbledon, Tour de France, The Masters, NBA Finals, Ashes, etc. Series ote bag selvage hot chicken authentic turmeric truffaut hexagon try-hard chambray.
           </p>
           <div className="flex justify-center" data-aos="zoom-down">
             <button className="inline-flex text-white border-0 py-2 px-6 focus:outline-none rounded bg-yellow-500 hover:bg-stone-900 text-lg">
