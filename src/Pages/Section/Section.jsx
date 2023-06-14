@@ -8,7 +8,7 @@ const Section = () => {
   }, []);
 
   return (
-    <section className="text-gray-600 body-font">
+    <section className="text-gray-600 w-auto overflow-hidden body-font">
       <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
         <div
           data-aos="fade-right"
@@ -22,9 +22,9 @@ const Section = () => {
         </div>
         <div
           data-aos="flip-down"
-          className="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center"
+          className="flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center"
         >
-          <h1 className="title-font sm:text-4xl font-bold text-xl mb-4  text-gray-900">
+          <h1 className="title-font sm:text-4xl font-bold text-xl mb-4 text-gray-900">
             Sports are specific <br />
             physical activities
             <br className="hidden lg:inline-block" /> one can compete Game

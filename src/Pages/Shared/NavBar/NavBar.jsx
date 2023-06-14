@@ -16,7 +16,7 @@ function NavBar() {
   };
 
   return (
-    <header className="bg-yellow-500  text-black sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
+    <header className="bg-yellow-500 w-full overflow-hidden text-black sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
       <div className="flex items-center justify-between px-4 py-3 sm:p-0">
         <div className="inline-flex items-center">
           <img  className="rounded-tl-3xl h-10 mr-2" src="https://img.freepik.com/premium-vector/sports-academy-logo-illustration_288067-677.jpg" alt="" />
