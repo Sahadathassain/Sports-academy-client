@@ -76,7 +76,7 @@ const Dashboard = () => {
       <div className="w-64 bg-yellow-500 fixed h-screen">
         <div className="flex items-center justify-center p-4">
           <div className="items-center justify-center">
-            <img src={user?.photoURL} alt="Avatar" className="w-30 h-30 mb-4 rounded-full ml-5" />
+            <img src={user?.photoURL} alt="Avatar" className="w-24 h-25 mb-4 rounded-full ml-5" />
             <div>
               <p className="text-black  text-xl font-bold ">{user?.displayName}</p>
             </div>
