@@ -50,7 +50,7 @@ const router = createBrowserRouter([
     element: <DashBoard></DashBoard>,
     children: [
       {
-        path:'addclass',
+        path:'addClass',
         element:<AddClasses></AddClasses>
       },
       {
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         element:<MyEnrolledClasses/>,
       },
       {
-        path:'selected-classes',
+        path:'selectedClasses',
         element:<MySelectedClasses></MySelectedClasses>,
       },
       {

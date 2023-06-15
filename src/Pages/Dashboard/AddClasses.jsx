@@ -3,8 +3,8 @@ import { useState } from 'react';
 const AddClasses = () => {
   const [className, setClassName] = useState('');
   const [classImage, setClassImage] = useState('');
-  const [availableSeats, setAvailableSeats] = useState(0);
-  const [price, setPrice] = useState(0);
+  const [availableSeats, setAvailableSeats] = useState();
+  const [price, setPrice] = useState();
   const [instructorName, setInstructorName] = useState('');
   const [instructorEmail, setInstructorEmail] = useState('');
   const [instructorImage, setInstructorImage] = useState('');
@@ -62,8 +62,8 @@ const AddClasses = () => {
         // Reset form fields or perform any other necessary actions
         setClassName('');
         setClassImage('');
-        setAvailableSeats(0);
-        setPrice(0);
+        setAvailableSeats('');
+        setPrice('');
         setInstructorName('');
         setInstructorEmail('');
         setInstructorImage('');

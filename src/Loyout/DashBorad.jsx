@@ -19,13 +19,13 @@ const Dashboard = () => {
       <li>
         <NavLink className="mr-2 flex items-center" to="enrolled-classes" exact='true'>
           <FcPaid className="mr-2" />
-          <span className="text-black text-2xl"> My Enrolled Classes</span>
+          <span className="text-black text-1xl"> My Enrolled Classes</span>
         </NavLink>
       </li>
       <li>
-        <NavLink className="mr-2 mt-9 mb-5 flex items-center" to="selected-classes" exact='true'>
+        <NavLink className="mr-2 mt-9 mb-5 flex items-center" to="selectedClasses" exact='true'>
           <AiFillHome className="mr-2" />
-          <span className="text-black text-2xl"> My Selected Classes</span>
+          <span className="text-black text-1xl"> My Selected Classes</span>
         </NavLink>
       </li>
       <li>
@@ -40,7 +40,7 @@ const Dashboard = () => {
   const renderInstructorLinks = () => (
     <>
       <li>
-        <NavLink className="mr-2 flex items-center" to="add-class" exact='true'>
+        <NavLink className="mr-2 flex items-center" to="addClass" exact='true'>
           <FaAddressCard className="mr-2" />
           <span className="text-black text-2xl">Add Class</span>
         </NavLink>
@@ -76,14 +76,14 @@ const Dashboard = () => {
       <div className="w-64 bg-yellow-500 fixed h-screen">
         <div className="flex items-center justify-center p-4">
           <div className="items-center justify-center">
-            <img src={user?.photoURL} alt="Avatar" className="w-48 h-48 rounded-full mr-3" />
+            <img src={user?.photoURL} alt="Avatar" className="w-30 h-30 mb-4 rounded-full ml-5" />
             <div>
-              <p className="text-black text-center font-bold">{user?.displayName}</p>
+              <p className="text-black  text-xl font-bold ">{user?.displayName}</p>
             </div>
           </div>
         </div>
-
-        <div className="gap-10 ${loading ? 'loader' : ''}">
+<hr className='bg-black' />
+        <div className="gap-10  ${loading ? 'loader' : ''}">
           <ul className="p-4">
             {isStudent && renderStudentLinks()}
             {isInstructor && renderInstructorLinks()}

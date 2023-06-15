@@ -1,7 +1,10 @@
 import  { useState, useEffect } from 'react';
+import FeedbackModal from './FeedbackModal';
 
-const ClassesPage = () => {
+const ManageClasses = () => {
   const [classes, setClasses] = useState([]);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch('http://localhost:5000/allData')
@@ -11,35 +14,58 @@ const ClassesPage = () => {
   }, []);
 
   const handleApprove = (classId) => {
-    setClasses((prevClasses) => {
-      return prevClasses.map((cls) => {
-        if (cls._id === classId) {
-          return { ...cls, status: 'approved' };
-        }
-        return cls;
-      });
+    const updatedClasses = classes.map((cls) => {
+      if (cls._id === classId) {
+        return { ...cls, status: 'approved' };
+      }
+      return cls;
     });
+    setClasses(updatedClasses);
+    updateClassStatus(classId, 'approved'); // Update status in the server/database
   };
 
   const handleDeny = (classId) => {
-    setClasses((prevClasses) => {
-      return prevClasses.map((cls) => {
-        if (cls._id === classId) {
-          return { ...cls, status: 'denied' };
-        }
-        return cls;
-      });
+    const updatedClasses = classes.map((cls) => {
+      if (cls._id === classId) {
+        return { ...cls, status: 'denied' };
+      }
+      return cls;
     });
+    setClasses(updatedClasses);
+    updateClassStatus(classId, 'denied'); // Update status in the server/database
+  };
+
+  const updateClassStatus = (classId, status) => {
+    // Make an API request to update the class status in the server/database
+    fetch(`http://localhost:5000/classes/status/${classId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status }),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.log(error));
   };
 
   const handleSendFeedback = (classId) => {
-    // Implement logic to open modal or navigate to feedback route
-    console.log(`Send feedback for class with ID ${classId}`);
+    const selectedClass = classes.find((cls) => cls._id === classId);
+    setSelectedClass(selectedClass);
+    setShowModal(true);
+  };
+
+  const handleFeedbackSubmit = (feedback) => {
+    // Implement logic to send the feedback to the instructor
+    console.log('Submitting feedback:', feedback);
+
+    // Close the modal
+    setShowModal(false);
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">Classes</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">Classes</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {classes.map((cls) => (
           <div key={cls._id} className="bg-white rounded-lg overflow-hidden shadow-lg">
@@ -52,7 +78,7 @@ const ClassesPage = () => {
               <p className="text-sm mb-2">Price: {cls.price}</p>
               <p className="text-sm mb-2">Status: {cls.status || 'pending'}</p>
               {cls.status === 'pending' && (
-                <div>
+                <div className='flex'>
                   <button
                     onClick={() => handleApprove(cls._id)}
                     className="mr-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded disabled:opacity-50"
@@ -77,8 +103,19 @@ const ClassesPage = () => {
           </div>
         ))}
       </div>
+
+      {/* Render the modal */}
+      {showModal && selectedClass && (
+        <FeedbackModal
+          classId={selectedClass._id}
+          instructorName={selectedClass.instructorName}
+          instructorEmail={selectedClass.instructorEmail}
+          onSubmit={handleFeedbackSubmit}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };
 
-export default ClassesPage;
+export default ManageClasses;

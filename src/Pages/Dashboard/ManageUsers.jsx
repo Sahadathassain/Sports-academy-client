@@ -73,7 +73,7 @@ const ManageUsers = () => {
                   <img
                     src={user.photoURl}
                     alt="Avatar"
-                    className="w-14 h-14 rounded-full  mr-6"
+                    className="w-15 h-14 rounded-full  mr-"
                   />
                  
                 </div>
