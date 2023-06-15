@@ -1,10 +1,11 @@
-
 import 'tailwindcss/tailwind.css';
 
 const MySelectedClasses = () => {
-//   if (!data || data.length === 0) {
-//     return <p>No classes selected.</p>;
-//   }
+  const data = []; // Placeholder for the selected classes data
+
+  if (data.length === 0) {
+    return <p>No classes selected.</p>;
+  }
 
   return (
     <table className="w-full mx-auto bg-white">
@@ -20,9 +21,11 @@ const MySelectedClasses = () => {
         </tr>
       </thead>
       <tbody>
-        {/* {data.map((item, index) => (
+        {data.map((item, index) => (
           <tr key={index}>
-            <td className="py-2 px-4">{item.classImage}</td>
+            <td className="py-2 px-4">
+              <img src={item.classImage} alt={item.className} />
+            </td>
             <td className="py-2 px-4">{item.className}</td>
             <td className="py-2 px-4">{item.instructor}</td>
             <td className="py-2 px-4">{item.price}</td>
@@ -30,7 +33,7 @@ const MySelectedClasses = () => {
             <td className="py-2 px-4">{item.action}</td>
             <td className="py-2 px-4">{item.payment}</td>
           </tr>
-        ))} */}
+        ))}
       </tbody>
     </table>
   );
