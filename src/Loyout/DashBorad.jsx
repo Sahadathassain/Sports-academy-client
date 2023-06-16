@@ -9,8 +9,8 @@ import useAuth from '../hooks/useAuth';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
-  const isAdmin = true;
-  const isInstructor = false;
+  const isAdmin = false;
+  const isInstructor = true;
   const isStudent = false;
   console.log(user);
 
@@ -46,7 +46,7 @@ const Dashboard = () => {
         </NavLink>
       </li>
       <li>
-        <NavLink className="mr-2 mt-9 mb-5 flex items-center" to="my-classes" exact='true'>
+        <NavLink className="mr-2 mt-9 mb-5 flex items-center" to="myclass" exact='true'>
           <FaFolder className="mr-2" />
           <span className="text-black text-2xl">My Classes</span>
         </NavLink>

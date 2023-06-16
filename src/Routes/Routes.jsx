@@ -16,8 +16,10 @@ import ManageClasses from "../Pages/Dashboard/ManageClasses";
 import ManageUsers from "../Pages/Dashboard/ManageUsers";
 import Payment from "../Pages/Dashboard/Payment";
 import Instructors from "../Pages/Instructors/Instructors";
-import AllClass from "../Pages/AllClass/clll";
+
 import AddClasses from "../Pages/Dashboard/AddClasses";
+import AllClass from "../Pages/AllClass/AllClass";
+
 
 const router = createBrowserRouter([
   {

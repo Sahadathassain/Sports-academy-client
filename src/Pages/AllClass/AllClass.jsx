@@ -1,42 +1,26 @@
-import { useQuery } from "@tanstack/react-query";
+import  { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
-import useAuth from "../../hooks/useAuth";
 
+import axios from "axios";
+import { UserContext } from "../../hooks/UserContext";
+import { useQuery } from "@tanstack/react-query";
 
 const AllClass = () => {
-  const axiosSecure = useAxiosSecure();
-  
-  const { user,} = useAuth();
   const [selectedClasses, setSelectedClasses] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useContext(UserContext);
 
-  const { data: classes = [], refetch } = useQuery(["classes"], async () => {
-    const res = await axiosSecure.get("/classes");
+  const fetchClasses = async () => {
+    const res = await axios.get("http://localhost:5000/classes");
     return res.data;
-  });
+  };
 
-  const { data: selectedClassesData = [] } = useQuery(
-    ["selected-classes"],
-    async () => {
-      const res = await axiosSecure.get("/selectedclasses");
-      return res.data;
-    },
-    {
-      enabled: !!user,
-    }
-  );
-
-  useEffect(() => {
-    if (selectedClassesData.length > 0) {
-      setSelectedClasses(selectedClassesData);
-    }
-  }, [selectedClassesData]);
+  const { data: classes = [], refetch } = useQuery(['classes'], fetchClasses);
 
   const handleSelect = async (classData) => {
+    // Check if the user is logged in
     if (!user || !user.email) {
       Swal.fire({
         title: "Please login to select a class",
@@ -53,36 +37,24 @@ const AllClass = () => {
       return;
     }
 
-    const {
-      _id,
-      className,
-      classImage,
-      price,
-      availableSeats,
-      instructorName,
-      instructorEmail,
-      photoUrl,
-      feedback,
-    } = classData;
-
     const selectClass = {
       studentEmail: user.email,
       studentName: user.displayName,
-      className,
-      selectedId: _id,
-      classImage,
-      price,
-      availableSeats,
-      instructorName,
-      instructorEmail,
-      photoUrl,
-      feedback,
+      className: classData.className,
+      selectedId: classData._id,
+      classImage: classData.classImage,
+      price: classData.price,
+      availableSeats: classData.availableSeats,
+      instructorName: classData.instructorName,
+      instructorEmail: classData.instructorEmail,
+      photoUrl: classData.photoUrl,
+      feedback: classData.feedback,
       enrolled: false,
     };
 
     const isAlreadySelected = selectedClasses.some(
       (selectedClass) =>
-        selectedClass.selectedId === _id &&
+        selectedClass.selectedId === classData._id &&
         selectedClass.studentEmail === user.email
     );
 
@@ -102,18 +74,10 @@ const AllClass = () => {
       selectClass,
     ]);
 
-    fetch("http://localhost:5000/allData/selectedclasses", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        
-      },
-      body: JSON.stringify(selectClass),
-      
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.insertedId) {
+    axios
+      .post("http://localhost:5000/selectedclasses", selectClass)
+      .then((response) => {
+        if (response.data.insertedId) {
           Swal.fire({
             position: "top-end",
             icon: "success",
@@ -125,55 +89,48 @@ const AllClass = () => {
       });
   };
 
-
   const approvedClasses = classes.filter(
     (classData) => classData.status === "approved"
   );
+
   useEffect(() => {
     refetch();
   }, [refetch]);
 
- 
-
   return (
     <div className="w-full">
-      
-      {/* <h1 className="text-3xl text-center font-bold my-8">Approved Classes</h1> */}
       <div className="grid grid-cols-1 mx-4 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {approvedClasses.map((classData) => (
           <div
             key={classData._id}
             className={`class-card bg-white rounded-lg overflow-hidden shadow-md ${
               classData.availableSeats === 0 ? "no-seats" : ""
-            }`}>
+            }`}
+          >
             <img
               src={classData.classImage}
               alt={classData.className}
               className="w-full h-48"
             />
             <div className="p-4 text-lg">
-              <h2 className="text-xl font-bold mb-2">
-                Class Name:{classData.className}
-              </h2>
-              <p className="mb-2">Instructor: {classData.instructorName}</p>
-              <p className="mb-2">Total Seats: {classData.totalSeats}</p>
-              <p className="mb-2">
+              <h2 className="font-bold mb-2">{classData.className}</h2>
+              <p className="text-gray-600 mb-2">
+                Instructor: {classData.instructorName}
+              </p>
+              <p className="text-gray-600 mb-2">
+                Price: {classData.price} USD
+              </p>
+              <p className="text-gray-600 mb-2">
                 Available Seats: {classData.availableSeats}
               </p>
-              <p className="mb-2">Price: ${classData.price}</p>
+            </div>
+            <div className="p-4">
               <button
-                disabled={
-                  classData.availableSeats === 0 ||
-                  
-                  selectedClasses.some(
-                    (selectedClass) =>
-                      selectedClass.selectedId === classData._id &&
-                      selectedClass.studentEmail === user?.email
-                  )
-                }
+                className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={() => handleSelect(classData)}
-                className="btn-gray w-full disabled:bg-gray-500 disabled:hover:text-white disabled:cursor-not-allowed">
-                Select
+                disabled={classData.availableSeats === 0}
+              >
+                Select Class
               </button>
             </div>
           </div>

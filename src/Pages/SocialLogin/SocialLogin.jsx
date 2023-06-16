@@ -1,48 +1,46 @@
-import { useContext } from "react";
-import { FaGoogle } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../Providers/AuthProvider";
+import useAuth from "../../hooks/useAuth";
+import { FaGoogle } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const SocialLogin = () => {
-  const { signInWithGoogle } = useContext(AuthContext);
+  const {  signInWithGoogle } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-  const navigate = useNavigate();
-
-  const handleGoogleSignIn = async () => {
-    try {
-      const user = await signInWithGoogle(); // Obtain the Google sign-in token
-
-      // Save login data to the server
-      const userData = {
-        name: "user.name",
-        email: "user.email",
-        photoURl: "user.photoUrl",
+  const handleGoogleSignIn = () => {
+    signInWithGoogle().then((res) => {
+      console.log(res.user);
+      const users = {
+        name: res.user.displayName,
+        email: res.user.email,
+        photoURl: res.user.photoURL,
         role: "student",
       };
-      console.log(userData);
-      const response = await fetch("http://localhost:5000/users", {
+      console.log(users);
+      fetch("http://localhost:5000/users", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "content-type": "application/json",
         },
-        body: JSON.stringify({
-          user
-        }),
-      });
-
-      if (response.ok) {
-        console.log("Login data saved successfully!");
-      } else {
-        console.error("Failed to save login data.");
-      }
-
+        body: JSON.stringify(users),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.insertedId) {
+            Swal.fire({
+              position: "top-start",
+              icon: "success",
+              title: "User created successfully.",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        });
       navigate(from, { replace: true });
-      console.log("Signed in with Google successfully!");
-    } catch (error) {
-      console.error("Error signing in with Google:", error.message);
-    }
+    });
   };
+
 
   return (
     <div className="flex items-center justify-center">

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -173,6 +174,9 @@ const SignUp = () => {
           </button>
         </div>
       </form>
+      <div>
+        <SocialLogin></SocialLogin>
+      </div>
     </div>
   );
 };
