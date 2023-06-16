@@ -1,25 +1,31 @@
-import  { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { useLocation, useNavigate } from "react-router-dom";
-
 import axios from "axios";
+import { useQuery } from "react-query";
+
 import { UserContext } from "../../hooks/UserContext";
-import { useQuery } from "@tanstack/react-query";
 
 const AllClass = () => {
   const [selectedClasses, setSelectedClasses] = useState([]);
-  const navigate = useNavigate();
-  const location = useLocation();
   const { user } = useContext(UserContext);
 
   const fetchClasses = async () => {
-    const res = await axios.get("http://localhost:5000/classes");
-    return res.data;
+    try {
+      const res = await axios.get(`http://localhost:5000/classes`);
+     
+      return res.data;
+    } catch (error) {
+      console.error("Error fetching classes:", error);
+      throw error;
+    }
   };
+  const { data: classes = [], refetch } = useQuery(['classes'], fetchClasses, {
+    onError: (error) => {
+      console.error("Error fetching classes:", error);
+    },
+  });
 
-  const { data: classes = [], refetch } = useQuery(['classes'], fetchClasses);
-
-  const handleSelect = async (classData) => {
+  const handleSelect = async (classes) => {
     // Check if the user is logged in
     if (!user || !user.email) {
       Swal.fire({
@@ -29,10 +35,6 @@ const AllClass = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Login now!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/login", { state: { from: location } });
-        }
       });
       return;
     }
@@ -40,21 +42,21 @@ const AllClass = () => {
     const selectClass = {
       studentEmail: user.email,
       studentName: user.displayName,
-      className: classData.className,
-      selectedId: classData._id,
-      classImage: classData.classImage,
-      price: classData.price,
-      availableSeats: classData.availableSeats,
-      instructorName: classData.instructorName,
-      instructorEmail: classData.instructorEmail,
-      photoUrl: classData.photoUrl,
-      feedback: classData.feedback,
+      className: classes.className,
+      selectedId: classes._id,
+      classImage: classes.classImage,
+      price: classes.price,
+      availableSeats: classes.availableSeats,
+      instructorName: classes.instructorName,
+      instructorEmail: classes.instructorEmail,
+      photoUrl: classes.photoUrl,
+      feedback: classes.feedback,
       enrolled: false,
     };
-
+console.log(classes);
     const isAlreadySelected = selectedClasses.some(
       (selectedClass) =>
-        selectedClass.selectedId === classData._id &&
+        selectedClass.selectedId === classes._id &&
         selectedClass.studentEmail === user.email
     );
 
@@ -75,7 +77,7 @@ const AllClass = () => {
     ]);
 
     axios
-      .post("http://localhost:5000/selectedclasses", selectClass)
+      .post(`http://localhost:5000/classes`, selectClass)
       .then((response) => {
         if (response.data.insertedId) {
           Swal.fire({
@@ -90,7 +92,7 @@ const AllClass = () => {
   };
 
   const approvedClasses = classes.filter(
-    (classData) => classData.status === "approved"
+    (classesData) => classesData.status === "approved"
   );
 
   useEffect(() => {

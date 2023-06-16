@@ -5,7 +5,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import ReactModal from "react-modal";
 import UpdateClassForm from "../AllClass/UpdateClassForm";
 
-const MyClasses = () => {
+const MyClasses= () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
   const axiosSecure = useAxiosSecure();
@@ -14,8 +14,8 @@ const MyClasses = () => {
     return res.data;
   });
 
-  const handleUpdateClick = (classData) => {
-    setSelectedClass(classData);
+  const handleUpdateClick = (classesData) => {
+    setSelectedClass(classesData);
     setIsModalOpen(true);
   };
 
@@ -25,13 +25,13 @@ const MyClasses = () => {
   };
 
   return (
-    <div className="container pl-20">
+    <div className=" w-full ml-20">
       <h2 className="text-2xl font-bold mb-4 text-center">Instructor Classes</h2>
       <div className="overflow-x-auto">
         <div className="w-full overflow-scroll">
-          <table className="w-full table-auto ">
+          <table className="w-full table-auto">
             <thead>
-              <tr> 
+              <tr>
                 <th className="px-4 py-2">#</th>
                 <th className="px-4 py-2">Class Name</th>
                 <th className="px-4 py-2">Status</th>
@@ -41,25 +41,23 @@ const MyClasses = () => {
               </tr>
             </thead>
             <tbody>
-              {classes.map((classData, index) => (
+              {classes.map((classesData, index) => (
                 <tr
-                  key={classData._id}
-                  className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
-                >
+                  key={classesData._id}
+                  className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}>
                   <td className="px-4 py-2 border">{index + 1}</td>
-                  <td className="px-4 py-2 border">{classData.className}</td>
-                  <td className="px-4 py-2 border">{classData.status}</td>
+                  <td className="px-4 py-2 border">{classesData.className}</td>
+                  <td className="px-4 py-2 border">{classesData.status}</td>
                   <td className="px-4 py-2 border">
-                    {classData?.enrolledStudents?.length || 0}
+                    {classesData?.enrolledStudents?.length || 0}
                   </td>
                   <td className="px-4 py-2 border">
-                    {classData.status ? classData.feedback : "-"}
+                    {classesData.status ? classesData.feedback : "-"}
                   </td>
                   <td className="px-4 py-2 border">
                     <button
                       className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-blue-700"
-                      onClick={() => handleUpdateClick(classData)}
-                    >
+                      onClick={() => handleUpdateClick(classesData)}>
                       Update
                     </button>
                   </td>
@@ -74,21 +72,16 @@ const MyClasses = () => {
         ariaHideApp={false}
         isOpen={isModalOpen}
         onRequestClose={handleModalClose}
-        contentLabel="Update Class"
-        className="modal"
-        overlayClassName="modal-overlay"
-      >
-        <div className="modal-content">
-          <h2 className="text-2xl font-bold mb-4">Update Class</h2>
-          {selectedClass && (
-            <UpdateClassForm
-              refetch={refetch}
-              classData={selectedClass}
-              onSubmit={handleModalClose}
-              onClose={handleModalClose}
-            />
-          )}
-        </div>
+        contentLabel="Update Class">
+        <h2 className="text-2xl font-bold mb-4">Update Class</h2>
+        {selectedClass && (
+          <UpdateClassForm
+            refetch={refetch}
+            classesData={selectedClass}
+            onSubmit={handleModalClose}
+            onClose={handleModalClose}
+          />
+        )}
       </ReactModal>
     </div>
   );

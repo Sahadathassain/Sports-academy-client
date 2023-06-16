@@ -6,7 +6,7 @@ import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 Modal.setAppElement('#root');
 
-const UpdateClassForm = ({ classData, onSubmit, onClose, refetch }) => {
+const UpdateClassForm = ({ classesData, onSubmit, onClose, refetch }) => {
   const axiosSecure = useAxiosSecure();
   const { register, handleSubmit } = useForm();
 
@@ -20,7 +20,7 @@ const UpdateClassForm = ({ classData, onSubmit, onClose, refetch }) => {
       classImage,
     };
     try {
-      const response = await axiosSecure.patch(`/classes/${classData._id}`, updateData);
+      const response = await axiosSecure.patch(`/classes/${classesData._id}`, updateData);
       console.log(response.data);
       onSubmit();
       refetch();
@@ -41,7 +41,7 @@ const UpdateClassForm = ({ classData, onSubmit, onClose, refetch }) => {
           type="text"
           id="className"
           {...register("className")}
-          defaultValue={classData.className}
+          defaultValue={classesData.className}
           className="w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
@@ -56,7 +56,7 @@ const UpdateClassForm = ({ classData, onSubmit, onClose, refetch }) => {
           type="text"
           id="classImage"
           {...register("classImage")}
-          defaultValue={classData.classImage}
+          defaultValue={classesData.classImage}
           className="w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
@@ -71,7 +71,7 @@ const UpdateClassForm = ({ classData, onSubmit, onClose, refetch }) => {
           type="number"
           id="availableSeats"
           {...register("availableSeats")}
-          defaultValue={classData.availableSeats}
+          defaultValue={classesData.availableSeats}
           className="w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
@@ -84,7 +84,7 @@ const UpdateClassForm = ({ classData, onSubmit, onClose, refetch }) => {
           type="number"
           id="price"
           {...register("price")}
-          defaultValue={classData.price}
+          defaultValue={classesData.price}
           className="w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
