@@ -1,32 +1,28 @@
-
-
-import useAuth from "../../hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-
-
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
+import useAuth from "../../hooks/useAuth";
+
 
 const AllClass = () => {
   const axiosSecure = useAxiosSecure();
   
-  const { user } = useAuth();
+  const { user,} = useAuth();
   const [selectedClasses, setSelectedClasses] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { data: classes = [], refetch } = useQuery(["users"], async () => {
-    const res = await axiosSecure.get("/users");
+  const { data: classes = [], refetch } = useQuery(["classes"], async () => {
+    const res = await axiosSecure.get("/classes");
     return res.data;
   });
 
   const { data: selectedClassesData = [] } = useQuery(
-    ["selectedclasses"],
+    ["selected-classes"],
     async () => {
-      const res = await axiosSecure.get("/selectedclasses");
+      const res = await axiosSecure.get("/selected-classes");
       return res.data;
     },
     {
@@ -106,10 +102,11 @@ const AllClass = () => {
       selectClass,
     ]);
 
-    fetch("http://localhost:5000/allData/selectedclasses", {
+    fetch("https://sport-zone-academy-server.vercel.app/selected-classes", {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        
       },
       body: JSON.stringify(selectClass),
     })
@@ -138,7 +135,7 @@ const AllClass = () => {
 
   return (
     <div className="w-full">
-     
+      
       <h1 className="text-3xl text-center font-bold my-8">Approved Classes</h1>
       <div className="grid grid-cols-1 mx-4 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {approvedClasses.map((classData) => (

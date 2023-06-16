@@ -1,46 +1,24 @@
-import { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
-const Section = () => {
-  useEffect(() => {
-    AOS.init({ duration: 2000 }); // Initialize AOS with desired options
-  }, []);
 
+function Section() {
   return (
-    <section className="text-gray-600 mx-auto">
-      <div className="mx-auto flex flex-col md:flex-row items-center px-5 py-24">
-        <div
-          data-aos="fade-right"
-          className="lg:w-1/2 md:w-5/6 mb-10 md:mb-0"
-        >
-          <img
-            className="object-cover object-center rounded"
-            alt="hero"
-            src="https://img.freepik.com/premium-vector/rainbow-colored-silhouette-people-with-different-sports-related-colors_635979-992.jpg?w=2000"
-          />
-        </div>
-        <div
-          data-aos="flip-down"
-          className="flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center"
-        >
-          <h1 className="title-font sm:text-4xl font-bold text-xl mb-4 text-gray-900">
-            Sports are specific <br />
-            physical activities
-            <br className="hidden lg:inline-block" /> one can compete in.
-          </h1>
-          <p className="mb-8 leading-relaxed">
-            Some famous sports include the Super Bowl, FIFA World Cup, Olympic Games, UEFA Champions League, Wimbledon, Tour de France, The Masters, NBA Finals, Ashes, etc. Series ote bag selvage hot chicken authentic turmeric truffaut hexagon try-hard chambray.
-          </p>
-          <div className="flex justify-center" data-aos="zoom-down">
-            <button className="inline-flex text-white border-0 py-2 px-6 focus:outline-none rounded bg-yellow-500 hover:bg-stone-900 text-lg">
-              Enroll now
-            </button>
-          </div>
-        </div>
+    <div>
+      <h1>dhfgFHSDFJKSkdfjSDK</h1>
+      <div>
+        <img className="w-1/2 h-full" src="https://img.freepik.com/premium-vector/rainbow-colored-silhouette-people-with-different-sports-related-colors_635979-992.jpg" alt="" />
       </div>
-    </section>
+      <div>
+        <h1>
+        Sports are specific <br />
+            physical activities
+        </h1>
+        <p>
+        Some famous sports include the Super Bowl, FIFA World Cup, Olympic Games, UEFA Champions League, Wimbledon, Tour de France, <br /> The Masters, NBA Finals, Ashes, etc. Series ote bag selvage hot chicken <br /> authentic turmeric truffaut hexagon try-hard chambray.
+        </p>
+        <button className="btn btn-primary">Get Started</button>
+      </div>
+    </div>
   );
-};
+}
 
 export default Section;

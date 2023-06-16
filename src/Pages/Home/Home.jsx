@@ -1,8 +1,9 @@
 import { Helmet } from "react-helmet";
-import Section from "../Section/Section";
+
 import TopInstructors from "../Top Instructors/TopInstructors";
 import Testimonial from "../Testimonial/Testimonial";
 import ContactForm from "../ContactForm/ContactForm";
+import Section from "../Section/Section";
 
 
 
