@@ -1,27 +1,35 @@
-import  { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../../Providers/AuthProvider";
-
+import { MdLightMode, MdDarkMode } from "react-icons/md";
 
 function NavBar() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { user, logOut } = useContext(AuthContext);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logOut, handleToggleTheme,theme } = useContext(AuthContext);
+  console.log(theme);
+  const [modeIcon, setModeIcon] = useState(false);
   const handleLogOut = () => {
     logOut()
-      .then(() => {})
+      .then(() => { })
       .catch((error) => console.log(error));
   };
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  const handleModeIcon = () => {
+    setModeIcon(!modeIcon);
+  };
+  useEffect(() => {
+    handleToggleTheme();
+  }, []);
 
   return (
-    <header className="bg-yellow-500 w-full overflow-hidden text-black sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
+    <header className={`bg-yellow-500   text-black sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3 ${theme}`}>
       <div className="flex items-center justify-between px-4 py-3 sm:p-0">
         <div className="inline-flex items-center">
-          <img  className="rounded-tl-3xl h-10 mr-2" src="https://img.freepik.com/premium-vector/sports-academy-logo-illustration_288067-677.jpg" alt="" />
+          <img className="rounded-tl-3xl h-10 mr-2" src="https://img.freepik.com/premium-vector/sports-academy-logo-illustration_288067-677.jpg" alt="" />
           <Link to="/" className="text-white text-2xl font-bold">
-           Sports Academy
+            Sports Academy
           </Link>
         </div>
         <div className="sm:hidden">
@@ -66,11 +74,10 @@ function NavBar() {
         </div>
       </div>
       <nav
-        className={`${
-          isMenuOpen ? "block" : "hidden"
-        } sm:block sm:flex sm:items-center sm:w-auto`}
+        className={`${isMenuOpen ? "block" : "hidden"
+          } sm:block sm:'flex' sm:items-center sm:w-auto`}
       >
-        <div className="px-2 pt-2 pb-4 sm:flex sm:ml-13">
+        <div className="px-2 pt-2 pb-4  sm:flex sm:ml-13">
           <NavLink
             to="/"
             exact={true.toString()}
@@ -87,27 +94,27 @@ function NavBar() {
           >
             Instructors
           </NavLink>
-         
-            <NavLink
-              to="/allclass"
-              exact={true.toString()}
-              className="block px-2 py-1 text-white font-semibold rounded hover:bg-gray-700 sm:mt-0 sm:ml-2"
-              activeClassName="bg-gray-700"
-            >
-             Classes
-            </NavLink>
-         
-         
-            <NavLink
-              to="/dashboard "
-              exact={true.toString()}
-              className="block px-2 py-1 text-white font-semibold rounded hover:bg-gray-700 sm:mt-0 sm:ml-2"
-              activeClassName="bg-gray-700"
-            >
-              Dashboard 
-            </NavLink>
-          
-          
+
+          <NavLink
+            to="/allclass"
+            exact={true.toString()}
+            className="block px-2 py-1 text-white font-semibold rounded hover:bg-gray-700 sm:mt-0 sm:ml-2"
+            activeClassName="bg-gray-700"
+          >
+            Classes
+          </NavLink>
+
+
+          <NavLink
+            to="/dashboard "
+            exact={true.toString()}
+            className="block px-2 py-1 text-white font-semibold rounded hover:bg-gray-700 sm:mt-0 sm:ml-2"
+            activeClassName="bg-gray-700"
+          >
+            Dashboard
+          </NavLink>
+
+
           {user && user.photoURL ? (
             <img
               src={user.photoURL}
@@ -132,7 +139,30 @@ function NavBar() {
             >
               Login
             </NavLink>
+
+
           )}
+
+
+          <div className="mr-5">
+            <span
+              title="Change Mode"
+              className="text-[#FB834A] text-xl font-medium"
+              onClick={handleToggleTheme}
+            >
+              <span onClick={handleModeIcon}>
+                {modeIcon ? (
+                  <button className="myBtn">
+                    <MdLightMode size={22}></MdLightMode>
+                  </button>
+                ) : (
+                  <button className="myBtn">
+                    <MdDarkMode size={22}></MdDarkMode>
+                  </button>
+                )}
+              </span>
+            </span>
+          </div>
         </div>
       </nav>
     </header>

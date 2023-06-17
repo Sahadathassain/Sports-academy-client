@@ -37,7 +37,7 @@ const SignUp = () => {
               role: "student",
             };
             console.log(users);
-            fetch(`http://localhost:5000/users`, {
+            fetch(`https://y-nine-murex.vercel.app/users`, {
               method: "POST",
               headers: {
                 "content-type": "application/json",

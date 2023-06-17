@@ -14,12 +14,24 @@ import { app } from "../firebase/firebase.config";
 
 export const AuthContext = createContext(null);
 
+
+
+
+
+
+
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
+
+
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [theme, setTheme] = useState("light");
+  
+
 
   const createUser = (email, password) => {
     setLoading(true);
@@ -79,6 +91,13 @@ const AuthProvider = ({ children }) => {
      
     });
   };
+  const handleToggleTheme = () => {
+    if (theme === "light") {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (loggedUser) => {
@@ -110,6 +129,8 @@ const AuthProvider = ({ children }) => {
     signInWithGoogle,
     logOut,
     updateUserProfile,
+    handleToggleTheme,
+    theme 
   };
 
   return (

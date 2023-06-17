@@ -7,7 +7,7 @@ const ManageClasses = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5000/allData')
+    fetch('https://y-nine-murex.vercel.app/allData')
       .then((response) => response.json())
       .then((data) => setClasses(data))
       .catch((error) => console.log(error));
@@ -37,7 +37,7 @@ const ManageClasses = () => {
 
   const updateClassStatus = (classId, status) => {
     // Make an API request to update the class status in the server/database
-    fetch(`http://localhost:5000/classes/status/${classId}`, {
+    fetch(`https://y-nine-murex.vercel.app/classes/status/${classId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

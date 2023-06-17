@@ -1,145 +1,79 @@
-import { useContext, useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import axios from "axios";
-import { useQuery } from "react-query";
-
-import { UserContext } from "../../hooks/UserContext";
+import { useState, useEffect } from 'react';
 
 const AllClass = () => {
-  const [selectedClasses, setSelectedClasses] = useState([]);
-  const { user } = useContext(UserContext);
+    const [classes, setClasses] = useState([]);
 
-  const fetchClasses = async () => {
-    try {
-      const res = await axios.get(`http://localhost:5000/classes`);
-     
-      return res.data;
-    } catch (error) {
-      console.error("Error fetching classes:", error);
-      throw error;
-    }
-  };
-  const { data: classes = [], refetch } = useQuery(['classes'], fetchClasses, {
-    onError: (error) => {
-      console.error("Error fetching classes:", error);
-    },
-  });
+    useEffect(() => {
+        const fetchClasses = async () => {
+            try {
+                const response = await fetch('https://y-nine-murex.vercel.app/allData');
+                if (response.ok) {
+                    const data = await response.json();
+                    setClasses(data);
+                } else {
+                    console.log('Failed to fetch classes');
+                }
+            } catch (error) {
+                console.log('An error occurred:', error);
+            }
+        };
 
-  const handleSelect = async (classes) => {
-    // Check if the user is logged in
-    if (!user || !user.email) {
-      Swal.fire({
-        title: "Please login to select a class",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Login now!",
-      });
-      return;
-    }
+        fetchClasses();
+    }, []);
 
-    const selectClass = {
-      studentEmail: user.email,
-      studentName: user.displayName,
-      className: classes.className,
-      selectedId: classes._id,
-      classImage: classes.classImage,
-      price: classes.price,
-      availableSeats: classes.availableSeats,
-      instructorName: classes.instructorName,
-      instructorEmail: classes.instructorEmail,
-      photoUrl: classes.photoUrl,
-      feedback: classes.feedback,
-      enrolled: false,
-    };
-console.log(classes);
-    const isAlreadySelected = selectedClasses.some(
-      (selectedClass) =>
-        selectedClass.selectedId === classes._id &&
-        selectedClass.studentEmail === user.email
+
+    return (
+        <div className="bg-gray-200 mx-auto  p-4 w-auto">
+            <h2 className="text-2xl font-bold mb-4 text-center">All Class Information</h2>
+
+            <table className="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">
+                            Image
+                        </th>
+                        <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">
+                            Name
+                        </th>
+                        <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">
+                            Instructor Name
+                        </th>
+                        <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">
+                            Available Seats
+                        </th>
+                        <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">
+                            Price
+                        </th>
+                        <th className="px-6 py-3 border-b-2 border-gray-300 text-center text-sm font-bold text-gray-800">Button</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {classes.map((classItem) => (
+                        <tr key={classItem.id}>
+                            <td className="px-10 mx-2 py-6   ">
+                                <img
+                                    src={classItem.
+                                        classImage}
+                                    alt={classItem.name}
+                                    className="h-40 w-25 rounded-xl"
+                                />
+                            </td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">{classItem.className}</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">{classItem.
+                                instructorName}</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">{classItem.availableSeats}</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">{classItem.price}</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">
+                                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
-
-    if (isAlreadySelected) {
-      Swal.fire({
-        position: "top-end",
-        icon: "info",
-        title: "Class already selected",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      return;
-    }
-
-    setSelectedClasses((prevSelectedClasses) => [
-      ...prevSelectedClasses,
-      selectClass,
-    ]);
-
-    axios
-      .post(`http://localhost:5000/classes`, selectClass)
-      .then((response) => {
-        if (response.data.insertedId) {
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Class is selected",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      });
-  };
-
-  const approvedClasses = classes.filter(
-    (classesData) => classesData.status === "approved"
-  );
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  return (
-    <div className="w-full">
-      <div className="grid grid-cols-1 mx-4 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {approvedClasses.map((classData) => (
-          <div
-            key={classData._id}
-            className={`class-card bg-white rounded-lg overflow-hidden shadow-md ${
-              classData.availableSeats === 0 ? "no-seats" : ""
-            }`}
-          >
-            <img
-              src={classData.classImage}
-              alt={classData.className}
-              className="w-full h-48"
-            />
-            <div className="p-4 text-lg">
-              <h2 className="font-bold mb-2">{classData.className}</h2>
-              <p className="text-gray-600 mb-2">
-                Instructor: {classData.instructorName}
-              </p>
-              <p className="text-gray-600 mb-2">
-                Price: {classData.price} USD
-              </p>
-              <p className="text-gray-600 mb-2">
-                Available Seats: {classData.availableSeats}
-              </p>
-            </div>
-            <div className="p-4">
-              <button
-                className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                onClick={() => handleSelect(classData)}
-                disabled={classData.availableSeats === 0}
-              >
-                Select Class
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 };
 
 export default AllClass;

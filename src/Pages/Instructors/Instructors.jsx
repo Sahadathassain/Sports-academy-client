@@ -4,7 +4,7 @@ const Instructors = () => {
   const [classes, setClasses] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/allData')
+    fetch('https://y-nine-murex.vercel.app/allData')
       .then(response => response.json())
       .then(data => setClasses(data))
       .catch(error => console.log(error));

@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import useAuth from '../../hooks/useAuth';
 
 const AddClasses = () => {
+  const {user} =useAuth();
+  console.log(user);
   const [className, setClassName] = useState('');
   const [classImage, setClassImage] = useState('');
   const [availableSeats, setAvailableSeats] = useState();
@@ -40,7 +43,7 @@ const AddClasses = () => {
   const addButtonClicked = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/addClass', {
+      const response = await fetch('https://y-nine-murex.vercel.app/addClass', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +90,9 @@ const AddClasses = () => {
             <input
               type="text"
               id="class-name"
-              value={className}
+             
+              defaultValue={user?.displayName}
+              readOnly
               onChange={updateClassName}
               className="border w-full border-gray-400 px-3 py-2 rounded-md focus:outline-none"
             />
@@ -146,7 +151,9 @@ const AddClasses = () => {
             <input
               type="email"
               id="instructor-email"
-              value={instructorEmail}
+       
+              defaultValue={user?.email}
+              readOnly
               onChange={updateInstructorEmail}
               className="border w-full border-gray-400 px-3 py-2 rounded-md focus:outline-none"
             />
